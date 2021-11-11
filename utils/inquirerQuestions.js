@@ -1,5 +1,5 @@
 const inquirer = require('inquirer'),
-  {getDepartments, getRoles, getEmployees} = require('./sqlCommands')
+  {getDepartments, getRoles, getEmployees, addDepartment, addRoleSQL} = require('./sqlCommands')
 
 
 const questions = {
@@ -20,13 +20,26 @@ const questions = {
     }
   ],
 
-  addDepartment: [
-    {
-      type: 'input',
-      message: 'What is the name of the new department?',
-      name: 'newDepartment'
-    }
-  ],
+  addDepartment: async function(cb) {
+    await new Promise((resolve, reject) => {
+      inquirer.prompt([
+        {
+          type: 'input',
+          message: 'What is the name of the new department?',
+          name: 'newDepartment'
+        }
+      ])
+      .then((data) => {
+        if(cb) {
+          addDepartment(data.newDepartment)
+          cb()
+        } else {
+          console.log(data)
+          resolve()
+        }
+      })
+    })
+  },
 
   addRole: async function(cb) {
     let departments = await getDepartments()
@@ -51,6 +64,7 @@ const questions = {
       ])
       .then((data) => {
         if(cb) {
+          addRoleSQL(data.newRoleName, data.newRoleSalary, data.newRoleDepartment)
           cb()
         } else {
           console.log(data)
@@ -90,6 +104,7 @@ const questions = {
       ])
       .then((data) => {
         if(cb) {
+          console.info('New employee added!')
           cb()
         } else {
           console.log(data)
@@ -107,16 +122,19 @@ const questions = {
         {
           type: 'rawlist',
           message: 'Which employee would you like to update the role for?',
+          name: 'empName',
           choices: employees
         },
         {
           type: 'rawlist',
           message: `What is the employee's new role?`,
+          name: 'empNewRole',
           choices: roles
         }
       ])
       .then((data) => {
         if(cb) {
+          console.log('Employee role updated!')
           cb()
         } else {
           console.log(data)

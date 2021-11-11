@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const mysql = require('mysql2/promise')
+const mysql2 = require('mysql2')
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -9,6 +10,12 @@ const db = mysql.createConnection({
   database: process.env.DB,
 })
 
+const db2 = mysql2.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB,
+})
 
 async function getDepartments () {
   const departments = []
@@ -40,5 +47,27 @@ async function getEmployees () {
   return employees
 }
 
+const addDepartment = (dept) => {
+  db2.query(`INSERT INTO department (name) VALUES (?)`, dept, (err, results) => {
+    if(err) {
+      console.error(err)
+    } else {
+      console.info('New department added!')
+    }
+  })
+}
 
-module.exports = {getDepartments, getRoles, getEmployees}
+const addRoleSQL = async (title, salary, department) => {
+  const departments = await getDepartments()
+  const deptNum = departments.indexOf(department) + 1
+  db2.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', [title, salary, deptNum], (err, results) => {
+    if(err) {
+      console.error(err)
+    } else {
+      console.info('New role added!')
+    }
+  })
+}
+
+
+module.exports = {getDepartments, getRoles, getEmployees, addDepartment, addRoleSQL}
