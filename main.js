@@ -6,7 +6,11 @@ const inquirer = require('inquirer'),
     mainMenuQuestion,
     addDepartment,
   } = require('./utils/inquirerQuestions').questions,
-  { getDepartmentsGeneral, getRolesGeneral, getEmployeesGeneral } = require('./utils/sqlCommands')
+  {
+    getDepartmentsGeneral,
+    getRolesGeneral,
+    getEmployeesGeneral,
+  } = require('./utils/sqlCommands')
 
 const init = () => {
   inquirer.prompt(mainMenuQuestion).then(async ({ mainMenu }) => {

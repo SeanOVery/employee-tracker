@@ -45,7 +45,9 @@ const getRoles = async () => {
 
 const getRolesGeneral = async () => {
   const con = await db
-  const [rows, fields] = await con.execute('SELECT role.id, role.title, role.salary, department.name AS department FROM role JOIN department ON role.department_id = department.id')
+  const [rows, fields] = await con.execute(
+    'SELECT role.id, role.title, role.salary, department.name AS department FROM role JOIN department ON role.department_id = department.id'
+  )
   return rows
 }
 
@@ -63,7 +65,9 @@ const getEmployees = async () => {
 
 const getEmployeesGeneral = async () => {
   const con = await db
-  const [rows, fields] = await con.execute('SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, employee.manager_id AS manager FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id')
+  const [rows, fields] = await con.execute(
+    'SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, employee.manager_id AS manager FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id'
+  )
   return rows
 }
 
@@ -120,13 +124,17 @@ const updateEmployeeRoleSQL = async (employee, role) => {
   const roleNum = roles.indexOf(role) + 1
   const employees = await getEmployees()
   const empNum = employees.indexOf(employee) + 1
-  db2.query('UPDATE employee SET role_id = ? WHERE id = ?', [roleNum, empNum], (err, results) => {
-    if(err) {
-      console.error(err)
-    } else {
-      console.info('Employee role updated!')
+  db2.query(
+    'UPDATE employee SET role_id = ? WHERE id = ?',
+    [roleNum, empNum],
+    (err, results) => {
+      if (err) {
+        console.error(err)
+      } else {
+        console.info('Employee role updated!')
+      }
     }
-  })
+  )
 }
 
 module.exports = {
@@ -139,5 +147,5 @@ module.exports = {
   updateEmployeeRoleSQL,
   getDepartmentsGeneral,
   getRolesGeneral,
-  getEmployeesGeneral
+  getEmployeesGeneral,
 }
