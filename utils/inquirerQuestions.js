@@ -1,5 +1,5 @@
 const inquirer = require('inquirer'),
-  {getDepartments, getRoles, getEmployees, addDepartment, addRoleSQL} = require('./sqlCommands')
+  {getDepartments, getRoles, getEmployees, addDepartmentSQL, addRoleSQL, addEmployeeSQL} = require('./sqlCommands')
 
 
 const questions = {
@@ -31,7 +31,7 @@ const questions = {
       ])
       .then((data) => {
         if(cb) {
-          addDepartment(data.newDepartment)
+          addDepartmentSQL(data.newDepartment)
           cb()
         } else {
           console.log(data)
@@ -104,7 +104,7 @@ const questions = {
       ])
       .then((data) => {
         if(cb) {
-          console.info('New employee added!')
+          addEmployeeSQL(data.newEmpFirstName, data.newEmpLastName, data.newEmpRole, data.newEmpManager)
           cb()
         } else {
           console.log(data)

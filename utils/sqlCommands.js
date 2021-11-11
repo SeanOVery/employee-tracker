@@ -47,7 +47,7 @@ async function getEmployees () {
   return employees
 }
 
-const addDepartment = (dept) => {
+const addDepartmentSQL = (dept) => {
   db2.query(`INSERT INTO department (name) VALUES (?)`, dept, (err, results) => {
     if(err) {
       console.error(err)
@@ -69,5 +69,19 @@ const addRoleSQL = async (title, salary, department) => {
   })
 }
 
+const addEmployeeSQL = async (firstName, lastName, role, manager) => {
+  const roles = await getRoles()
+  const roleNum = roles.indexOf(role) + 1
+  const employees = await getEmployees()
+  const managerNum = employees.indexOf(manager) + 1
+  db2.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [firstName, lastName, roleNum, managerNum], (err, results) => {
+    if(err) {
+      console.error(err)
+    } else {
+      console.info('New employee added!')
+    }
+  })
+}
 
-module.exports = {getDepartments, getRoles, getEmployees, addDepartment, addRoleSQL}
+
+module.exports = {getDepartments, getRoles, getEmployees, addDepartmentSQL, addRoleSQL, addEmployeeSQL}
