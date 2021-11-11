@@ -49,7 +49,6 @@ const getRolesGeneral = async () => {
   return rows
 }
 
-
 const getEmployees = async () => {
   const employees = []
   const con = await db
@@ -64,7 +63,7 @@ const getEmployees = async () => {
 
 const getEmployeesGeneral = async () => {
   const con = await db
-  const [rows, fields] = await con.execute('SELECT * FROM employee')
+  const [rows, fields] = await con.execute('SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, employee.manager_id AS manager FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id')
   return rows
 }
 
